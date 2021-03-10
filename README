@@ -4,20 +4,36 @@ https://github.com/mamgad/RUDPy
 
 we chose UDP to TCP in prevision of very crowded situtation. 
 
+General idea: 
+
+Drivers arrive at the red light and their vehicles benefit from the LiFi connectivity. 
+They have the possibility to push and update to the "red light cloud" using the command PUSH. The update  
+contains 5 elements (arrival route, exit route, delay, parking spot and car identification). This 
+procedure is the same for every car pushing the update. 
+Drivers also have the possibility to request information from the "red light cloud" using the command GET. 
+It will give information on the real time delay of the car exit lane. 
+
 
 we managed: 
     - creating the TCP server. We used code i created for the RIO203 project
       it is not as detailled as the final code by it will be easier for me to
       build from there. 
     
-    - started the creation of the object cars: we defined the random lane arri
-      val and exit selection. 
+    - array to be sent by cars is created, the server is aware of the element's positon 
+      in the array and treat them based on it. 
+
+    - the function that aggregates the lanes delay is ready and functional, it returns the 
+      cars id and the delay accused 
 
 TODO: 
-    - on the server side --> implement the function that will collect the info 
-      provided by the cars and forward it to the right vehicle
-      how does the acces point will request the info ?
+    - implement the forwarding to the right vehicle; it will be done by comparing arrival lane 
+      with the exit lane of the follwing car. 
 
-    - on the client side --> modelisation of the cars' delay (normal distribution). 
-      The lecturer mentionned CAM message so the object message that is created in
-      the file cars.py devra respecter cette architecture de message. 
+    - Find a modelisation and usage of the CAM message.  
+
+    - have the answer from the server returning the the arrival lane in addition to car id 
+      and delay 
+    
+    - finding a better use case for the parking spot: See how it is appplicable in the context of a parking garage
+    
+
