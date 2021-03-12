@@ -8,7 +8,7 @@ import time
 host = '192.168.1.154'
 port = 40000 
 
-print("commands available: \n 1) EXIT\n 2) GET\n 3) KILL")
+print("commands available: \n 1) PUSH\n 2) GET\n 3) NONE")
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
@@ -32,7 +32,7 @@ def cars_motion():
      
     
                         #### Determination of the parking spot ####
-    spots = [1,2,3,4,5,6,7,8,9,10,15,25,50]
+    spots = [1,2,3,4,5,6,7,8,9]
     parking_spot_availables = random.choice(spots)
 
                         #### Final message to be sent ####
@@ -41,22 +41,25 @@ def cars_motion():
 
 while True: 
     command = input("Enter your command: ")
-    if command == 'EXIT':
+    if command == 'NONE':
         # Sends exit request to the server
         s.send(command.encode())
         break
-    elif command == 'KILL': 
-        s.send(command.encode())
+    elif command == 'PUSH': 
+        s.send(str(command).encode())
+        infor = cars_motion()
+        s.send(str(infor).encode())
         break
     elif command == 'GET':
+        s.send(str(command).encode()) # sends the command GET
         info = cars_motion()
-        s.send(str(info).encode()) 
+        s.send(str(info).encode()) # send the relevant information for car push, stored under the variable mess
 
         #s.send(command.encode())
         
     else: 
     	s.send(command.encode())
-    reply = s.recv(1024)
+    reply = s.recv(2048)
     print(reply.decode('utf-8'))
 
 s.close()
