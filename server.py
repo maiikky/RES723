@@ -16,24 +16,25 @@ CONDITION = [True]
 def client_handler(connection): 
     client_id = 0
     answer = 0 
-    data = connection.recv(1024)
-    message = data.decode('utf-8')
-    ''' Message is sent  by client side and must contain: 
-          - client_id to reference with register (the list)
-          - action: info or parking; 1 being requesting traffic info from server and 2 requesting parking inside a airport garage'''
-    request = message.split('/')
-    client_id = request[0]
-    action = request[1]
-    if client_id in register: 
-        if action ==  'info': 
-            pass 
-        elif action == 'parking':
-            answer = parking_handler()
-    else: 
-        print("Client not authorised.")
-        connection.close()
-        return
-    connection.sendall(str(answer).encode())
+    while CONDITION[0]:
+        data = connection.recv(1024)
+        message = data.decode('utf-8')
+        ''' Message is sent  by client side and must contain: 
+            - client_id to reference with register (the list)
+            - action: info or parking; 1 being requesting traffic info from server and 2 requesting parking inside a airport garage'''
+        request = message.split('/')
+        client_id = request[0]
+        action = request[1]
+        if client_id in register: 
+            if action ==  'information': 
+                answer = information_handler() 
+            elif action == 'parking':
+                answer = parking_handler()
+        else: 
+            print("Client not authorised.")
+            connection.close()
+            return
+        connection.sendall(str(answer).encode())
 
 
 
@@ -67,16 +68,17 @@ def parking_handler(): #This function parsed the information received by cars
     #connection.sendall(str(available_spot.encode())
     return available_spot
 
-def information_handler(Args):
-    print(Args)
-    print(type(Args))
-    return(Args)
+def information_handler():
+    
+    treatment =  cars_motion()
+    
+    return(treatment)
     
 
 def cars_motion():
-    global mess, parking_spot_availables, car_id
+    global mess, parking_spot_availables
                         #### Determination of the car trajectory inside the network ####
-    car_id = 1
+    
     routes = [1,2,3,4]
     exit_routes = [1,2,3,4]
     car_arrival_route = random.choice(routes) # The provenance of the car is chosen randomly
@@ -85,9 +87,9 @@ def cars_motion():
     
 
                         #### Determination of the realtime delay accused ####
-    delay = 10 # expressed in minutes 
-    sigma = 3
-    realtime_delay = int(stat.mean(np.random.normal(delay, sigma, 10))) # the car collects information on the delay of others cars
+    delay = 5 # expressed in minutes 
+    sigma = 2
+    realtime_delay = int(stat.mean(np.random.normal(delay, sigma, 5))) # the car collects information on the delay of others cars
      
     
                         #### Determination of the parking spot ####
@@ -96,7 +98,7 @@ def cars_motion():
     parking_spot_availables = random.choice(spots)
 
                         #### Final message to be sent ####
-    mess = [car_arrival_route,realtime_delay,car_exit_route,parking_spot_availables,car_id]#this tuple represents the message that will be sent to the access point.
+    mess = [car_arrival_route,realtime_delay,car_exit_route,parking_spot_availables]#this tuple represents the message that will be sent to the access point.
     return mess 
 
 if __name__ == '__main__':
