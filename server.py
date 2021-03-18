@@ -12,6 +12,7 @@ host = ''
 port = 40000
 
 CONDITION = [True]
+global available_spot, parking_spot 
 
 def client_handler(connection): 
     client_id = 0
@@ -36,37 +37,13 @@ def client_handler(connection):
             return
         connection.sendall(str(answer).encode())
 
-
-
-
-'''def GET():
-    
-          ### AGGREGATION OF THE CAR DELAY ###
-    mean_delay = 10
-    sigma = 3
-
-    car_delay = int(car_get[4])
-    lane_delay  = 0
-    print(car_get)
-    print(len(car_get))
-    if mean_delay < car_delay < mean_delay+sigma:
-    lane_delay  = [int(car_get[13]),car_delay]
-    
-    elif mean_delay - sigma < car_delay < mean_delay:
-    lane_delay  = [int(car_get[13]),car_delay] 
-
-    elif car_delay < mean_delay - sigma:
-    lane_delay = []
-
-    else: 
-    lane_delay = []
-    print(type(lane_delay))
-    return lane_delay'''
-
 def parking_handler(): #This function parsed the information received by cars
-    available_spot = 104
+    available_spot = 105
     #connection.sendall(str(available_spot.encode())
-    return available_spot
+    parking_spot = available_spot - 1
+    available_spot = parking_spot 
+    return parking_spot
+
 
 def information_handler():
     
@@ -76,30 +53,33 @@ def information_handler():
     
 
 def cars_motion():
-    global mess, parking_spot_availables
+    global lane_speed 
                         #### Determination of the car trajectory inside the network ####
     
     routes = [1,2,3,4]
     exit_routes = [1,2,3,4]
     car_arrival_route = random.choice(routes) # The provenance of the car is chosen randomly
     exit_routes.remove(car_arrival_route) # the different exit possible for the car 
-    car_exit_route = random.choice(exit_routes) # the car's exit
+    #car_exit_route = random.choice(exit_routes) # the car's exit
     
 
                         #### Determination of the realtime delay accused ####
     delay = 5 # expressed in minutes 
     sigma = 2
-    realtime_delay = int(stat.mean(np.random.normal(delay, sigma, 5))) # the car collects information on the delay of others cars
-     
-    
-                        #### Determination of the parking spot ####
-    spots = [1,2,3,4,5,6,7,8,9]
-    
-    parking_spot_availables = random.choice(spots)
+    realtime_delay1 = int(stat.mean(np.random.normal(delay, sigma, 5))) # the car collects information on the delay of others cars
+    realtime_delay2 = int(stat.mean(np.random.normal(delay, sigma, 5))) 
+    realtime_delay3 = int(stat.mean(np.random.normal(delay, sigma, 5)))
 
-                        #### Final message to be sent ####
-    mess = [car_arrival_route,realtime_delay,car_exit_route,parking_spot_availables]#this tuple represents the message that will be sent to the access point.
-    return mess 
+                        #### Determination of the distance mapped to each lane
+    options = [100, 150, 230, 280, 300, 340, 370, 400, 420, 500]
+    distances = []
+    for _ in exit_routes: # underscore ask python not to save in place in the memory while operating the for loop
+        ans = random.choice(options)
+        distances.append(ans)
+                        #### Computation of the "lane speed" #### based on v = d/t
+    lane_speed = [(realtime_delay1 * distances[0]), (realtime_delay2 * distances[1]), (realtime_delay3 * distances[2])]
+        
+    return lane_speed 
 
 if __name__ == '__main__':
     global register, information, parking
