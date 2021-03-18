@@ -38,4 +38,29 @@ TODO:
     
     - implementing the database: link of the video https://www.youtube.com/watch?v=BfXhZDNlXy8&list=PLB5jA40tNf3tRMbTpBA0N7lfDZNLZAa9G&index=3
     
+DASHBOARD: 
 
+    Here are listed the function of the dashboard. 
+
+        On the client side we want to see the exit road and the estimated delay on them. 
+
+        when arriving at the parking, the number of availbale spots must be display for the driver. 
+
+
+INFORMATION REQUESTED BY THE CLIENT: 
+
+    - The client request information at the red light(access point)
+    - The redlight simulates traffic information received by other user of the service
+    - The redlight assess what information simulated is relevant to that user (delay on the 3 lanes)
+    - Add the notion of distance to each lane. i.e. lane 1 has 300m to destination
+                                                    lane 2 has 500m to destination
+                                                    lane 3 has 400m to destination 
+                                                     
+    - Knowing that v = d/t, classification of lanes based on how fast going through them will be. 
+    - we can consider this service to be an update for the driver whenever requested. 
+
+PARKING REQUESTED BY DRIVER: 
+
+    - At a mall/airport parking entrance and driver wants to know its capacity
+    - Total number of available spots available( -1 every time the command parking is registered)
+    - 1 function will  generated coordonates for an available spot immitating the CAM messages architecture. 
