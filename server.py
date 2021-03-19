@@ -31,6 +31,7 @@ def client_handler(connection):
                 answer = information_handler() 
             elif action == 'parking':
                 answer = parking_handler()
+            
         else: 
             print("Client not authorised.")
             connection.close()
@@ -38,17 +39,19 @@ def client_handler(connection):
         connection.sendall(str(answer).encode())
 
 def parking_handler(): #This function parsed the information received by cars
-    available_spot = 105
-    #connection.sendall(str(available_spot.encode())
-    parking_spot = available_spot - 1
-    available_spot = parking_spot 
-    return parking_spot
+
+    available_spot = [100,90,45,60,50,40,30,20,10,1]
+    available_spot = random.choice(available_spot) - 1
+
+    available_locations = ['A','B','C']
+    available_locations = random.choice(available_locations)
+    options = 'Parking '+available_locations+' has '+str(available_spot) + ' spots available'
+    return options
 
 
 def information_handler():
     
     treatment =  cars_motion()
-    
     return(treatment)
     
 
@@ -78,7 +81,7 @@ def cars_motion():
         distances.append(ans)
                         #### Computation of the "lane speed" #### based on v = d/t
     lane_speed = [(realtime_delay1 * distances[0]), (realtime_delay2 * distances[1]), (realtime_delay3 * distances[2])]
-        
+    # possible to return the lane speed with the smallest weight    
     return lane_speed 
 
 if __name__ == '__main__':

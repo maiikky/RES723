@@ -12,7 +12,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
 
 while CONDITION[0]:
-    c_id = 4 
+    c_id = '4' 
     command = input("Enter your command: ")
     if command == 'NONE':
         message = command
