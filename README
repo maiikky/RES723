@@ -64,3 +64,9 @@ PARKING REQUESTED BY DRIVER:
     - At a mall/airport parking entrance and driver wants to know its capacity
     - Total number of available spots available( -1 every time the command parking is registered)
     - 1 function will  generated coordonates for an available spot immitating the CAM messages architecture. 
+
+NEW SCENARIO
+ - the car arrives near an acces point
+ - establishes a connection with the access point
+ - accept a connection with another car in the line
+ 

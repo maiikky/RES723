@@ -14,6 +14,13 @@ port = 40000
 CONDITION = [True]
 global available_spot, parking_spot 
 
+
+
+
+def light_state_update(): 
+
+
+
 def client_handler(connection): 
     client_id = 0
     answer = 0 

@@ -22,10 +22,13 @@ while CONDITION[0]:
         s.send(message.encode())
     elif command == 'information':
         message = str(c_id)+'/'+command
-        s.send(message.encode()) # send the relevant information for car push, stored under the variable mess     
+        s.send(message.encode()) # send the relevant information for car push, stored under the variable mess  
+    elif command == 'light'
+        message =    
     else: 
     	s.send(command.encode())
     reply = s.recv(1024)
     print(reply.decode('utf-8'))
 
 s.close()
+
