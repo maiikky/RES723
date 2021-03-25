@@ -5,23 +5,31 @@ import numpy as np
 import random 
 import datetime
 import time 
-global traffic_light, lane_speed
+
+def parking(): 
+    global options 
+    available_spot = [100,90,45,60,50,40,30,20,10,1]
+    available_spot = random.choice(available_spot) - 1
+
+    available_locations = ['A','B','C']
+    available_locations = random.choice(available_locations)
+    options = 'Parking '+available_locations+' has '+str(available_spot) + ' spots available'
+
+def traffic_light(): 
+    global states, light
+    states = ["RED","GREEN","ORANGE"]
+    while True: 
+        light = states[0]
+        time.sleep(90)
+        light = states[1]
+        time.sleep(30)
+        light = states[2]
+        time.sleep(10)
+    return light
 
 def loop():
 
-                #### State of the traffic light ####
-    states = ["RED","GREEN","ORANGE"]
-    while True: 
-        traffic_light = states[0]
-        #insert a send message here indicating -90 seconds to green light
-        time.sleep(90)
-        traffic_light = states[1]
-        #insert a send message here indicating -30 seconds to orange light
-        time.sleep(30)
-        traffic_light = states[2]
-        #insert a send message here indicating -10 seconds to RED light
-        time.sleep(10)
-
+    global lane_speed
                 #### Cars motion simulation ####
                 
                         #### Determination of the car trajectory inside the network ####
@@ -43,7 +51,7 @@ def loop():
                         #### Determination of the distance mapped to each lane
     options = [100, 150, 230, 280, 300, 340, 370, 400, 420, 500]
     distances = []
-    for _ in exit_routes: # underscore ask python not to save in place in the memory while operating the for loop
+    for i in exit_routes: # underscore ask python not to save in place in the memory while operating the for loop
         ans = random.choice(options)
         distances.append(ans)
                         #### Computation of the "lane speed" #### based on v = d/t
@@ -52,10 +60,13 @@ def loop():
     return lane_speed,traffic_light
 
 
-class access_point:
+class AccessPoint:
     def __init__(self): 
         _thread.start_new_thread(loop, ())
+        _thread.start_new_thread(parking, ())
+        _thread.start_new_thread(traffic_light, ())
         self.state = "RED"
+        self.parking_info = 0
 
         def run(self):
             while True: 
@@ -65,19 +76,27 @@ class access_point:
         _thread.start_new_thread(run, (self,))
         
     def get_name(self): 
-        return "access point"
+        return "access point A"
         
     def update_state(self):
-        if traffic_light == states[0]:
+        if light == states[0]:
             self.state = "RED"
-        elif traffic_light == "GREEN":
+        elif light == "GREEN":
             self.state = "GREEN"
-        elif traffic_light == "ORANGE":
+        elif light == "ORANGE":
             self.state = "ORANGE"
          
-    def get_state():
+    def get_state(self):
         self.update_state()
         return self.state
+
+    def get_parking(self): 
+        self.parking_info = options
+        return self.parking_info 
+
+    def traffic_information(self):
+        self.delay_info = lane_speed
+        return self.delay_info 
 
 
         
