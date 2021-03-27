@@ -16,15 +16,26 @@ def con_handler(connection):
     message = connection.recv(1024)
     command = message.decode('utf-8')
     result = 0 
+    answer = 0 
     
     if  command == '1':
         result = red_light.traffic_information()
     
     elif command == '2':
         result = red_light.get_parking()
+        connection.sendall(str.encode(str(result))) 
+        message = connection.recv(1024)
+        answer = message.decode()
+        if answer == 'Yes':
+            result = red_light.get_specificPlace()
+            connection.sendall(str.encode(str(result)))
+        else: 
+            connection.close()
+        
 
     elif command == '3':
         result = red_light.get_state()
+
     
 
 

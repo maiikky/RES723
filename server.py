@@ -47,13 +47,7 @@ def client_handler(connection):
 
 def parking_handler(): #This function parsed the information received by cars
 
-    available_spot = [100,90,45,60,50,40,30,20,10,1]
-    available_spot = random.choice(available_spot) - 1
-
-    available_locations = ['A','B','C']
-    available_locations = random.choice(available_locations)
-    options = 'Parking '+available_locations+' has '+str(available_spot) + ' spots available'
-    return options
+    
 
 
 def information_handler():

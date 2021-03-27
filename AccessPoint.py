@@ -9,11 +9,19 @@ import time
 def parking(): 
     global options 
     available_spot = [100,90,45,60,50,40,30,20,10,1]
-    available_spot = random.choice(available_spot) - 1
+    available_spot = random.choice(available_spot) 
 
     available_locations = ['A','B','C']
     available_locations = random.choice(available_locations)
-    options = 'Parking '+available_locations+' has '+str(available_spot) + ' spots available'
+    options ='Parking '+available_locations+' has '+str(available_spot) + ' spots available'
+    return options
+
+def locations(): 
+    global gen_place
+    longitude = [-77.8903,-77.8765, -79.9078, -80,5678]
+    lattitude = [39.9098,39.8790,38.7856,40.9876,42.9034]
+    gen_place = [random.choice(longitude),random.choice(lattitude)]
+    
 
 def traffic_light(): 
     global states, light
@@ -65,6 +73,7 @@ class AccessPoint:
         _thread.start_new_thread(loop, ())
         _thread.start_new_thread(parking, ())
         _thread.start_new_thread(traffic_light, ())
+        _thread.start_new_thread(locations, ())
         self.state = "RED"
         self.parking_info = 0
 
@@ -97,6 +106,10 @@ class AccessPoint:
     def traffic_information(self):
         self.delay_info = lane_speed
         return self.delay_info 
+
+    def get_specificPlace(self):
+        self.specific_place = gen_place
+        return self.specific_place 
 
 
         
