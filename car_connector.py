@@ -10,27 +10,30 @@ Relay_PORT = 4444
 
 light_state = "RED"
 
-def car_handler(s):
-    while True:  
-        answer = 0 
-        if command == '1':
-            answer = s.recv(1024)
-            message = answer.decode('utf-8')
-            print(message)
-        elif command == '2':
-            answer = s.recv(1024)
-            message = answer.decode('utf-8')
-            print(message)
-            command2 = input("Would you like to go there?   Yes/No:  ")
-            s.sendall(bytes(command2,'utf-8'))
-            if command2 == 'Yes': 
-                location = s.recv(1024)
-                message2 = location.decode('utf-8')
-                print(message2)
-                s.close()
-            else: 
-                s.close()
-        s.close()
+def car_handler():
+    while True: 
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((host, port))
+            command_id = input('Your command:   ')
+            s.sendall(bytes(command_id,'utf-8')) # send messages that are 1/4 or 2/4
+            command = command_id.split('/')[0]
+            answer = 0 
+
+            if command == '1':
+                answer = s.recv(1024)
+                message = answer.decode('utf-8')
+                print(message)
+            elif command == '2':
+                answer = s.recv(1024)
+                message = answer.decode('utf-8')
+                print(message)
+                command2 = input("Would you like to go there?   Yes/No:  ")
+                s.sendall(bytes(command2,'utf-8'))
+                if command2 == 'Yes': 
+                    location = s.recv(1024)
+                    message2 = location.decode('utf-8')
+                    print(message2)
+            s.close()
 
 def state_handler():
     global light_state
@@ -66,12 +69,9 @@ def Transfer():
 if __name__ == "__main__":
     _thread.start_new_thread(state_handler, ())
     _thread.start_new_thread(Transfer, ())
+    _thread.start_new_thread(car_handler, ())
     while True:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((host, port))
-            command = input('Your command:   ')
-            s.sendall(bytes(command,'utf-8')) # send messages that are 1 or 2 
-            _thread.start_new_thread(car_handler, (s,))
+        time.sleep(10)
 
 
             
