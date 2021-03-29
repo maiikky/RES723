@@ -10,9 +10,7 @@ from cars import Cars
 HOST = ''
 PORT = 12346
 
-
 def con_handler(connection):
-
     data = connection.recv(1024)
     message = data.decode('utf-8')
     path = message.split('/')
@@ -24,6 +22,7 @@ def con_handler(connection):
     if id in user_id.get_susbriber():
         if  command == '1':
             result = red_light.traffic_information()
+            connection.sendall(str.encode(str(result)))
         elif command == '2':
             result = red_light.get_parking()
             connection.sendall(str.encode(str(result))) 
@@ -37,14 +36,15 @@ def con_handler(connection):
         elif command == '3':
             result = red_light.get_state()
             print(result)
-            connection.sendall(str.encode(str(result))) 
+            connection.sendall(str.encode(str(result)))
     else: 
         result = 'Not authorised'
         connection.sendall(bytes(result, 'utf-8'))
-        connection.close()
+    connection.close()
      
 if __name__ == "__main__":
-    global AccessPoint,Cars
+    global red_light
+    global user_id
     red_light = AccessPoint()
     user_id = Cars()
     while True: 

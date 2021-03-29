@@ -3,8 +3,13 @@ import _thread
 import statistics as stat
 import numpy as np 
 import random 
-import datetime
 import time 
+
+options  = ""
+gen_place = ""
+states = ["RED","GREEN","ORANGE"]
+light = ""
+lane_speed = ""
 
 def parking(): 
     global options 
@@ -24,8 +29,8 @@ def locations():
     
 
 def traffic_light(): 
-    global states, light
-    states = ["RED","GREEN","ORANGE"]
+    global states
+    global light
     while True: 
         light = states[0]
         time.sleep(90)
@@ -33,7 +38,7 @@ def traffic_light():
         time.sleep(30)
         light = states[2]
         time.sleep(10)
-    return light
+
 
 def loop():
 
