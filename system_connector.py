@@ -4,6 +4,7 @@ import cars
 import sys
 sys.path.append(".")
 from AccessPoint import AccessPoint
+from cars import Cars 
 
 
 HOST = ''
@@ -11,45 +12,48 @@ PORT = 12346
 
 
 def con_handler(connection):
-    #hello_message = print('Welcome! Your suscription allows you to choose from the following options: \n1) Traffic information\n2) Parking Information')
-    #.sendall(bytes(hello_message,"utf-8"))
-    message = connection.recv(1024)
-    command = message.decode('utf-8')
+
+    data = connection.recv(1024)
+    message = data.decode('utf-8')
+    path = message.split('/')
+    id = path[1]
+    command = path[0]   
     result = 0 
     answer = 0 
-    
-    if  command == '1':
-        result = red_light.traffic_information()
-    
-    elif command == '2':
-        result = red_light.get_parking()
-        connection.sendall(str.encode(str(result))) 
-        message = connection.recv(1024)
-        answer = message.decode()
-        if answer == 'Yes':
-            result = red_light.get_specificPlace()
-            connection.sendall(str.encode(str(result)))
-        else: 
-            connection.close()
-        
 
-    elif command == '3':
-        result = red_light.get_state()
-
-    
-
-
-    connection.sendall(str.encode(str(result))) 
+    if id in user_id.get_susbriber():
+        if  command == '1':
+            result = red_light.traffic_information()
+        elif command == '2':
+            result = red_light.get_parking()
+            connection.sendall(str.encode(str(result))) 
+            message = connection.recv(1024)
+            answer = message.decode()
+            if answer == 'Yes':
+                result = red_light.get_specificPlace()
+                connection.sendall(str.encode(str(result)))
+            else: 
+                connection.close()
+        elif command == '3':
+            result = red_light.get_state()
+            print(result)
+            connection.sendall(str.encode(str(result))) 
+    else: 
+        result = 'Not authorised'
+        connection.sendall(bytes(result, 'utf-8'))
+        connection.close()
+     
 if __name__ == "__main__":
-    global AccessPoint
+    global AccessPoint,Cars
     red_light = AccessPoint()
+    user_id = Cars()
     while True: 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as SystemSideSocket:
             try: 
                 SystemSideSocket.bind((HOST, PORT))
             except socket.error as e: 
                 print(e)
-            print('Car Socket is listenning..')
+            print('System Socket is listenning..')
             SystemSideSocket.listen(1)
             while True: 
                 client, address = SystemSideSocket.accept()
