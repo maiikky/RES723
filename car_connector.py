@@ -56,14 +56,13 @@ def Transfer():
         print("Car socket is listening for client in the line")
         FirstCarSocket.listen(1)
         while True: 
-            CAR, address = FirstCarSocket.accept()
+            car, address = FirstCarSocket.accept()
             print('Connected to: ' + address[0] + ':' + str(address[1]))
-            data = FirstCarSocket.recv(1024)
-            if data: 
+            data = car.recv(1024).decode('utf-8')
+            if len(data) != 0:
                 print(light_state)
-                FirstCarSocket.sendall(bytes(light_state,'utf-8'))
-                return
-        FirstCarSocket.close()
+                car.sendall(bytes(light_state,'utf-8'))
+            car.close()
 
         
 if __name__ == "__main__":
