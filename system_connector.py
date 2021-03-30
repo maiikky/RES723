@@ -14,8 +14,8 @@ def con_handler(connection):
     data = connection.recv(1024)
     message = data.decode('utf-8')
     path = message.split('/')
-    id = path[1]
     command = path[0]   
+    id = path[1]
     result = 0 
     answer = 0 
 
