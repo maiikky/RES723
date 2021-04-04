@@ -1,6 +1,7 @@
 import socket
 import _thread
 import time 
+import sys, errno
 
 host = '127.0.0.1'
 port = 12346
@@ -39,13 +40,17 @@ def state_handler():
     global light_state
     command = '3/4'
     while True:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((host, port))
-            s.sendall(bytes(command,'utf-8'))
-            light_state = s.recv(1024).decode('utf-8')
-            #print(light_state)
-            s.close()
-            time.sleep(1)
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect((host, port))
+                s.sendall(bytes(command,'utf-8'))
+                light_state = s.recv(1024).decode('utf-8')
+                #print(light_state)
+                s.close()
+        except IOError as e:
+            if e.errno == errno.EPIPE:
+                print(e.errno)
+        time.sleep(1)
 
 def Transfer(): 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as FirstCarSocket:
